@@ -1,3 +1,12 @@
+schedules:
+ - cron: '0 19 * * Mon,Tue,Wed,Thu,Fri'
+   displayName: Daily release
+   branches:
+    include:
+      - main
+   always: true 
+
+
 trigger: none
 
 name: $(Build.DefinitionName)_$(date:yyyyMMdd)$(Rev:.r)

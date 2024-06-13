@@ -1,3 +1,5 @@
 # Introduction 
-This is part of the solution for scheduling Azure DevOps release pipelines using Logic Apps.
+Demo project for scheduling the provisioing of resources and the decommissioning using the schdular trigger for pipelines.
+
+
 

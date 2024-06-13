@@ -1,0 +1,36 @@
+schedules:
+ - cron: '0 6 * * Mon,Tue,Wed,Thu,Fri' # Uses UTC time. Does not adjust for daylight savings
+   displayName: Daily resource decommission
+   branches:
+    include:
+      - main
+   always: true 
+
+
+trigger: none
+
+variables:
+  vmImageName: 'ubuntu-latest'
+  azureServiceConnection: 'svc-conn-daily-development-rg'
+  resourceGroupName: 'daily-development'
+  # Add other resource types as required below
+  resourceTypes: |
+    Microsoft.Compute/virtualMachines
+    Microsoft.Network/networkInterfaces
+    Microsoft.Storage/storageAccounts 
+
+pool:
+  vmImage: $(vmImageName)
+
+jobs:
+- job: DeleteResources
+  displayName: 'Delete Azure Resources'
+  steps:
+  - checkout: self  # Make sure the script file is checked out
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: $(azureServiceConnection)
+      scriptType: 'bash'
+      scriptLocation: 'scriptPath'
+      scriptPath: 'pipelines/scripts/remove-resources-bytype.sh'  # Path to your script file
+      arguments: '"${{ variables.resourceGroupName }}" "${{ variables.resourceTypes }}"'
